@@ -135,10 +135,24 @@ button:hover {
 </div>
 
 <script>
-  const WEBHOOK_URL = "https://discord.com/api/webhooks/1499888248582049852/vVJYew5XXdtZU_i2H0WdVzSgmEbjtrAT5IiXI296kb34G8Ei5poBFQdz_DB4T0rjobFN";
+  const WEBHOOK_URL = "TON_WEBHOOK_ICI";
+
+  const COOLDOWN = 5 * 60 * 1000; // 5 minutes
 
   document.getElementById('recrutementForm').addEventListener('submit', function(e) {
     e.preventDefault();
+
+    const now = Date.now();
+    const lastSend = localStorage.getItem("lastSendTime");
+
+    // 🔒 Anti-spam 5 min
+    if (lastSend && now - lastSend < COOLDOWN) {
+      const remaining = Math.ceil((COOLDOWN - (now - lastSend)) / 1000);
+      document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('errorMsg').innerText =
+        "⏳ Attends encore " + remaining + " secondes avant de renvoyer.";
+      return;
+    }
 
     const pseudo = document.getElementById('pseudo').value;
     const dispo = document.getElementById('dispo').value;
@@ -154,6 +168,10 @@ button:hover {
     })
     .then(response => {
       if (response.ok) {
+
+        // Sauvegarde du cooldown
+        localStorage.setItem("lastSendTime", now);
+
         document.getElementById('successMsg').style.display = 'block';
         document.getElementById('errorMsg').style.display = 'none';
         document.getElementById('recrutementForm').reset();
@@ -168,6 +186,7 @@ button:hover {
     .catch(error => {
       console.error(error);
       document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('errorMsg').innerText = "Erreur lors de l'envoi.";
     });
   });
 </script>
