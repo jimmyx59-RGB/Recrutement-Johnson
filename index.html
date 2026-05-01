@@ -10,7 +10,7 @@ body {
   padding: 0;
   font-family: Arial, sans-serif;
   height: 100vh;
-  position: relative; /* IMPORTANT */
+  position: relative;
 
   background-color: black;
 
@@ -42,17 +42,17 @@ body::after {
 
     background: url("logo.png") no-repeat center;
     background-size: contain;
-
-    background-color: black; /* remplis les côtés */
+    background-color: black;
 
     opacity: 0.25;
     filter: blur(2px);
 
     z-index: -1;
 }
+
 .container {
   position: relative;
-  z-index: 2; /* AU-DESSUS DE TOUT */
+  z-index: 2;
   background: #ffffff;
   padding: 30px;
   border-radius: 10px;
@@ -125,7 +125,12 @@ button:hover {
     <button type="submit">Envoyer</button>
   </form>
 
-  <div class="success" id="successMsg">Candidature envoyée !</div>
+  <div class="success" id="successMsg">
+    Candidature envoyée !<br>
+    👉 Rejoins le Discord : 
+    <a href="https://discord.gg/TONLIEN" target="_blank">Clique ici</a>
+  </div>
+
   <div class="error" id="errorMsg">Erreur lors de l'envoi.</div>
 </div>
 
@@ -152,6 +157,10 @@ button:hover {
         document.getElementById('successMsg').style.display = 'block';
         document.getElementById('errorMsg').style.display = 'none';
         document.getElementById('recrutementForm').reset();
+
+        // Ouvre le Discord automatiquement
+        window.open("https://discord.gg/CsUtCv2mbP", "_blank");
+
       } else {
         throw new Error("Erreur");
       }
