@@ -77,10 +77,10 @@
 
   <form id="recrutementForm">
     <label for="pseudo">Pseudo Discord</label>
-    <input type="text" id="pseudo" name="pseudo" required>
+    <input type="text" id="pseudo" required>
 
     <label for="dispo">Disponibilité</label>
-    <textarea id="dispo" name="dispo" rows="4" required></textarea>
+    <textarea id="dispo" rows="4" required></textarea>
 
     <button type="submit">Envoyer</button>
   </form>
@@ -90,8 +90,7 @@
 </div>
 
 <script>
-  // 👉 COLLE TON WEBHOOK DISCORD ICI
-  const WEBHOOK_URL=https://discord.com/api/webhooks/1499888248582049852/vVJYew5XXdtZU_i2H0WdVzSgmEbjtrAT5IiXI296kb34G8Ei5poBFQdz_DB4T0rjobFN;
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/1499888248582049852/vVJYew5XXdtZU_i2H0WdVzSgmEbjtrAT5IiXI296kb34G8Ei5poBFQdz_DB4T0rjobFN";
 
   document.getElementById('recrutementForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -100,7 +99,7 @@
     const dispo = document.getElementById('dispo').value;
 
     try {
-      await fetch(WEBHOOK_URL, {
+      const response = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -109,6 +108,10 @@
           content: `📩 Nouvelle candidature\n👤 Pseudo: ${pseudo}\n⏰ Disponibilité: ${dispo}`
         })
       });
+
+      if (!response.ok) {
+        throw new Error("Erreur HTTP: " + response.status);
+      }
 
       document.getElementById('successMsg').style.display = 'block';
       document.getElementById('errorMsg').style.display = 'none';
@@ -123,19 +126,3 @@
 
 </body>
 </html>
-
-<!--
-=============================
-COMMENT CONFIGURER DISCORD
-=============================
-
-1. Va dans ton serveur Discord
-2. Paramètres du serveur
-3. Intégrations
-4. Webhooks
-5. "Nouveau webhook"
-6. Choisis le salon (channel)
-7. Copie l'URL
-8. Remplace TON_WEBHOOK_ICI dans le code
-
--->
