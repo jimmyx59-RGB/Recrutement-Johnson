@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Recrutement Discord</title>
+  <style>
+    body {
+      background-color: #808080;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    h1 { text-align: center; }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #5865F2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #4752c4;
+    }
+
+    .success {
+      margin-top: 15px;
+      color: green;
+      text-align: center;
+      display: none;
+    }
+
+    .error {
+      margin-top: 15px;
+      color: red;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Recrutement</h1>
+
+  <form id="recrutementForm">
+    <label for="pseudo">Pseudo Discord</label>
+    <input type="text" id="pseudo" name="pseudo" required>
+
+    <label for="dispo">Disponibilité</label>
+    <textarea id="dispo" name="dispo" rows="4" required></textarea>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <div class="success" id="successMsg">Candidature envoyée sur Discord !</div>
+  <div class="error" id="errorMsg">Erreur lors de l'envoi.</div>
+</div>
+
+<script>
+  // 👉 COLLE TON WEBHOOK DISCORD ICI
+  const WEBHOOK_URL=https://discord.com/api/webhooks/1499888248582049852/vVJYew5XXdtZU_i2H0WdVzSgmEbjtrAT5IiXI296kb34G8Ei5poBFQdz_DB4T0rjobFN;
+
+  document.getElementById('recrutementForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const pseudo = document.getElementById('pseudo').value;
+    const dispo = document.getElementById('dispo').value;
+
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: `📩 Nouvelle candidature\n👤 Pseudo: ${pseudo}\n⏰ Disponibilité: ${dispo}`
+        })
+      });
+
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('errorMsg').style.display = 'none';
+      this.reset();
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById('errorMsg').style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
+
+<!--
+=============================
+COMMENT CONFIGURER DISCORD
+=============================
+
+1. Va dans ton serveur Discord
+2. Paramètres du serveur
+3. Intégrations
+4. Webhooks
+5. "Nouveau webhook"
+6. Choisis le salon (channel)
+7. Copie l'URL
+8. Remplace TON_WEBHOOK_ICI dans le code
+
+-->
