@@ -3,27 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>Recrutement Discord</title>
+
   <style>
-    body {
-      background-color: #808080;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+
+  background-color: #2f2f2f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🔥 LOGO EN GROS AU CENTRE */
+body::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background: url("logo.png") no-repeat center center;
+  background-size: 700px;
+
+  opacity: 0.25; /* 👈 SUPER IMPORTANT */
+  z-index: 0;
+}
+
+    /* effet sombre par-dessus le logo */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 0;
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       background: #ffffff;
       padding: 30px;
       border-radius: 10px;
       width: 350px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 0 25px gold;
     }
 
-    h1 { text-align: center; }
+    h1 {
+      text-align: center;
+    }
 
     label {
       display: block;
@@ -70,57 +101,57 @@
     }
   </style>
 </head>
+
 <body>
 
 <div class="container">
   <h1>Recrutement</h1>
 
   <form id="recrutementForm">
-    <label for="pseudo">Pseudo Discord</label>
+    <label>Pseudo Discord</label>
     <input type="text" id="pseudo" required>
 
-    <label for="dispo">Disponibilité</label>
+    <label>Disponibilité</label>
     <textarea id="dispo" rows="4" required></textarea>
 
     <button type="submit">Envoyer</button>
   </form>
 
-  <div class="success" id="successMsg">Candidature envoyée sur Discord !</div>
+  <div class="success" id="successMsg">Candidature envoyée !</div>
   <div class="error" id="errorMsg">Erreur lors de l'envoi.</div>
 </div>
 
 <script>
   const WEBHOOK_URL = "https://discord.com/api/webhooks/1499888248582049852/vVJYew5XXdtZU_i2H0WdVzSgmEbjtrAT5IiXI296kb34G8Ei5poBFQdz_DB4T0rjobFN";
 
-  document.getElementById('recrutementForm').addEventListener('submit', async function(e) {
+  document.getElementById('recrutementForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const pseudo = document.getElementById('pseudo').value;
     const dispo = document.getElementById('dispo').value;
 
-    try {
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          content: `📩 Nouvelle candidature\n👤 Pseudo: ${pseudo}\n⏰ Disponibilité: ${dispo}`
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur HTTP: " + response.status);
+    fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: "📩 Nouvelle candidature\n👤 Pseudo: " + pseudo + "\n⏰ Disponibilité: " + dispo
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('recrutementForm').reset();
+      } else {
+        throw new Error("Erreur");
       }
-
-      document.getElementById('successMsg').style.display = 'block';
-      document.getElementById('errorMsg').style.display = 'none';
-      this.reset();
-
-    } catch (error) {
+    })
+    .catch(error => {
       console.error(error);
       document.getElementById('errorMsg').style.display = 'block';
-    }
+    });
   });
 </script>
 
